@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment / Lab Copy Cover Page Generator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Arial,sans-serif;
+background:#f2f2f2;
+padding:20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+background:#fff;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input,
+select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:10px;
+margin-right:10px;
+}
+
+.generate{
+background:#1976d2;
+color:#fff;
+}
+
+.download{
+background:#2e7d32;
+color:#fff;
+}
+
+#preview{
+margin-top:30px;
+display:none;
+}
+
+/* PDF COVER */
+
+.cover-page{
+width:210mm;
+min-height:297mm;
+background:#fff;
+margin:auto;
+padding:15mm;
+font-family:"Times New Roman",serif;
+text-align:center;
+overflow:hidden;
+}
+
+.type{
+font-size:30px;
+font-weight:bold;
+margin-bottom:18px;
+}
+  
+.college{
+font-size:36px;
+line-height:1.2;
+margin-bottom:18px;
+font-weight:bold;
+}
+
+.course{
+font-size:24px;
+margin:10px 0;
+font-weight:bold;
+}
+
+.logo{
+width:170px;
+height:170px;
+object-fit:contain;
+display:block;
+margin:10px auto;
+}
+
+.section{
+margin-top:25px;
+}
+
+.section h3{
+font-size:28px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.name{
+font-size:26px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.section p{
+font-size:20px;
+line-height:1.5;
+margin:2px 0;
+}
+  
+.date{
+margin-top:35px;
+font-size:17px;
+font-weight:bold;
+}
+
+@media(max-width:850px){
+
+.cover-page{
+width:100%;
+height:auto;
+padding:20px;
+}
+
+.college{
+font-size:24px;
+}
+
+.course{
+font-size:18px;
+}
+
+.logo{
+width:120px;
+height:120px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>Assignment / Lab Copy Cover Page Generator</h2>
+
+<input type="text" id="college" placeholder="College Name">
+
+<input type="text" id="course" placeholder="Course Title">
+
+<input type="text" id="courseCode" placeholder="Course Code">
+
+<select id="submissionType">
+<option value="Assignment">Assignment</option>
+<option value="Lab Copy">Lab Copy</option>
+</select>
+
+<input type="text" id="teacher" placeholder="Faculty Name">
+
+<input type="text" id="designation" placeholder="Designation">
+
+<input type="text" id="department" placeholder="Department">
+
+<input type="text" id="student" placeholder="Student Name">
+
+<input type="text" id="studentId" placeholder="Student ID">
+
+<input type="text" id="roll" placeholder="Roll Number">
+
+<input type="text" id="reg" placeholder="Registration Number">
+
+<input type="text" id="semester" placeholder="Semester">
+
+<input type="text" id="session" placeholder="Session">
+
+<input type="date" id="date">
+
+<label><b>Upload College Logo</b></label>
+<input type="file" id="logo" accept="image/*">
+
+<button class="generate" onclick="generateCover()">
+Generate Preview
+</button>
+
+<button class="download" onclick="downloadPDF()">
+Download PDF
+</button>
+
+<div id="preview"></div>
+
+</div>
+
+<script>
+
+let logoImage="";
+
+document.getElementById("logo").addEventListener("change",function(e){
+
+const file=e.target.files[0];
+
+if(file){
+
+const reader=new FileReader();
+
+reader.onload=function(event){
+logoImage=event.target.result;
+};
+
+reader.readAsDataURL(file);
+
+}
+
+});
+
+function generateCover(){
+
+const college=document.getElementById("college").value;
+const course=document.getElementById("course").value;
+const courseCode=document.getElementById("courseCode").value;
+const submissionType=document.getElementById("submissionType").value;
+
+const teacher=document.getElementById("teacher").value;
+const designation=document.getElementById("designation").value;
+const department=document.getElementById("department").value;
+
+const student=document.getElementById("student").value;
+const studentId=document.getElementById("studentId").value;
+const roll=document.getElementById("roll").value;
+const reg=document.getElementById("reg").value;
+
+const semester=document.getElementById("semester").value;
+const session=document.getElementById("session").value;
+const inputDate = document.getElementById("date").value;
+
+let date = "";
+
+if (inputDate) {
+    const parts = inputDate.split("-"); // YYYY-MM-DD
+    date = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+}
+
+document.getElementById("preview").style.display="block";
+
+document.getElementById("preview").innerHTML=`
+
+<div class="cover-page">
+
+<div class="type">${submissionType}</div>
+
+<div class="college">${college}</div>
+
+<div class="course">
+<b>Course Title:</b> ${course}
+</div>
+
+<div class="course">
+<b>Course Code:</b> ${courseCode}
+</div>
+
+${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
+
+<div class="section">
+
+<h3>Submitted To</h3>
+
+<div class="name">${teacher}</div>
+
+<p>${designation}</p>
+
+<p>${department}</p>
+
+<p>${college}</p>
+
+</div>
+
+<div class="section">
+
+<h3>Submitted By</h3>
+
+<div class="name">${student}</div>
+
+<p>Student ID: ${studentId}</p>
+
+<p>Roll No: ${roll}</p>
+
+<p>Registration No: ${reg}</p>
+
+<p>Department: ${department}</p>
+
+<p>Semester: ${semester}</p>
+
+<p>Session: ${session}</p>
+<p><b>Date of Submission:</b> ${date}</p>
+
+</div>
+
+`;
+
+}
+
+function downloadPDF(){
+
+const element=document.querySelector(".cover-page");
+
+if(!element){
+alert("Generate Preview First");
+return;
+}
+
+html2pdf().set({
+
+margin:0,
+
+filename:"Cover_Page.pdf",
+
+pagebreak:{
+mode: "css"
+},
+
+image:{
+type:"jpeg",
+quality:1
+},
+
+html2canvas:{
+scale:2,
+useCORS:true
+},
+
+jsPDF:{
+unit:"mm",
+format:"a4",
+orientation:"portrait"
+}
+
+}).from(element).save();
+
+}
+
+</script>
+
+</body>
+</html>
