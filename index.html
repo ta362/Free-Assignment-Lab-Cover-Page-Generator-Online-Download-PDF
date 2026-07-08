@@ -65,116 +65,125 @@ color:#fff;
 #preview{
 margin-top:30px;
 display:none;
-/* প্রিভিউ স্ক্রিনে দেখার জন্য ব্যাকগ্রাউন্ড ও বর্ডার */
 background: #e0e0e0;
 padding: 20px;
 border-radius: 8px;
 }
 
-/* PDF COVER - 1 PAGE FIX */
-.cover-page{
-width:210mm;
-height:297mm; /* min-height বদলে নির্দিষ্ট height দেওয়া হলো */
-background:#fff;
-margin:auto;
-padding:20mm; /* পারফেক্ট মার্জিন */
-font-family:"Times New Roman",serif;
-text-align:center;
+/* 100% PERFECT 1-PAGE A4 COVER DESIGN */
+.cover-page {
+width: 210mm;
+height: 296mm; /* এ৪ সাইজের চেয়ে ১মিমি কম রাখা হয়েছে যাতে কোনোভাবেই ২য় পেজ তৈরি না হয় */
+background: #fff;
+margin: auto;
+padding: 20mm 15mm;
+font-family: "Times New Roman", serif;
+text-align: center;
+position: relative;
 box-sizing: border-box;
-display: flex;
-flex-direction: column;
-justify-content: space-between; /* সব এলিমেন্ট ১ পাতায় সমানভাবে সাজানোর জন্য */
+overflow: hidden;
 }
 
-.type{
-font-size:32px;
-font-weight:bold;
+.type {
+font-size: 32px;
+font-weight: bold;
 text-transform: uppercase;
-margin-top: 10px;
+margin-top: 10mm;
+letter-spacing: 1px;
 }
   
-.college{
-font-size:34px;
-line-height:1.2;
-font-weight:bold;
-margin-top: 15px;
+.college {
+font-size: 34px;
+line-height: 1.3;
+font-weight: bold;
+margin-top: 10mm;
+margin-bottom: 15mm;
 }
 
 .course-info {
-margin-top: 15px;
+margin-top: 15mm;
+margin-bottom: 15mm;
 }
 
-.course{
-font-size:22px;
-margin:5px 0;
+.course {
+font-size: 22px;
+margin: 8px 0;
 }
 
 .logo-container {
-height: 160px;
-display: flex;
-align-items: center;
-justify-content: center;
-margin: 15px 0;
+height: 150px;
+margin: 15mm auto;
+text-align: center;
 }
 
-.logo{
-max-width:160px;
-max-height:160px;
-object-fit:contain;
+.logo {
+max-width: 150px;
+max-height: 150px;
+object-fit: contain;
+display: inline-block;
 }
 
-/* সাবমিট সেকশনগুলোকে পাশাপাশি বা সুন্দর দূরত্বে রাখার জন্য */
-.submission-details {
-display: flex;
-justify-content: space-between;
+/* সাবমিশন সেকশন দুটি টেবিল লেআউটে করা হয়েছে যাতে পিডিএফ-এ ফ্লেক্সবক্সের ঝামেলা না হয় */
+.submission-table {
+width: 100%;
+margin-top: 20mm;
+border-collapse: collapse;
+}
+
+.submission-table td {
+width: 50%;
+vertical-align: top;
 text-align: left;
-margin-top: 20px;
 padding: 0 10px;
 }
 
-.section{
-width: 48%;
-}
-
-.section h3{
-font-size:22px;
-font-weight:bold;
+.section h3 {
+font-size: 24px;
+font-weight: bold;
 border-bottom: 2px solid #000;
 padding-bottom: 5px;
-margin-bottom: 12px;
+margin-bottom: 15px;
+text-transform: uppercase;
 }
 
-.name{
-font-size:20px;
-font-weight:bold;
-margin-bottom:6px;
+.name {
+font-size: 20px;
+font-weight: bold;
+margin-bottom: 8px;
 }
 
-.section p{
-font-size:16px;
-line-height:1.4;
-margin:4px 0;
+.section p {
+font-size: 17px;
+line-height: 1.5;
+margin: 5px 0;
 }
   
-.date{
-margin-bottom: 15px;
-font-size:18px;
-font-weight:bold;
+.date {
+position: absolute;
+bottom: 25mm; /* পেজের একদম নিচে নির্দিষ্ট দূরত্বে ফিক্সড থাকবে */
+left: 0;
+width: 100%;
+font-size: 18px;
+font-weight: bold;
+text-align: center;
 }
 
 @media(max-width:850px){
-/* শুধু ব্রাউজারে দেখার সুবিধার জন্য রেসপন্সিভ করা হলো, পিডিএফে এটার প্রভাব পড়বে না */
-.cover-page{
-width:100%;
-height:auto;
-padding:20px;
+/* ব্রাউজার প্রিভিউ রেসপন্সিভ এর জন্য */
+.cover-page {
+width: 100%;
+height: auto;
+padding: 20px;
 }
-.submission-details {
-flex-direction: column;
-}
-.section {
+.submission-table td {
+display: block;
 width: 100%;
 margin-bottom: 20px;
+}
+.date {
+position: relative;
+bottom: 0;
+margin-top: 30px;
 }
 }
 </style>
@@ -259,10 +268,8 @@ document.getElementById("preview").style.display="block";
 
 document.getElementById("preview").innerHTML=`
 <div class="cover-page">
-    <div>
-        <div class="type">${submissionType}</div>
-        <div class="college">${college}</div>
-    </div>
+    <div class="type">${submissionType}</div>
+    <div class="college">${college}</div>
 
     <div class="course-info">
         <div class="course"><b>Course Title:</b> ${course}</div>
@@ -273,26 +280,31 @@ document.getElementById("preview").innerHTML=`
         ${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
     </div>
 
-    <div class="submission-details">
-        <div class="section">
-            <h3>Submitted To</h3>
-            <div class="name">${teacher}</div>
-            <p>${designation}</p>
-            <p>${department}</p>
-            <p>${college}</p>
-        </div>
-
-        <div class="section">
-            <h3>Submitted By</h3>
-            <div class="name">${student}</div>
-            <p><b>Student ID:</b> ${studentId}</p>
-            <p><b>Roll No:</b> ${roll}</p>
-            <p><b>Reg No:</b> ${reg}</p>
-            <p><b>Department:</b> ${department}</p>
-            <p><b>Semester:</b> ${semester}</p>
-            <p><b>Session:</b> ${session}</p>
-        </div>
-    </div>
+    <table class="submission-table">
+        <tr>
+            <td>
+                <div class="section">
+                    <h3>Submitted To</h3>
+                    <div class="name">${teacher}</div>
+                    <p>${designation}</p>
+                    <p>Department of ${department}</p>
+                    <p>${college}</p>
+                </div>
+            </td>
+            <td>
+                <div class="section">
+                    <h3>Submitted By</h3>
+                    <div class="name">${student}</div>
+                    <p><b>Student ID:</b> ${studentId}</p>
+                    <p><b>Roll No:</b> ${roll}</p>
+                    <p><b>Reg No:</b> ${reg}</p>
+                    <p><b>Department:</b> ${department}</p>
+                    <p><b>Semester:</b> ${semester}</p>
+                    <p><b>Session:</b> ${session}</p>
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <div class="date">
         <p>Date of Submission: ${date}</p>
@@ -309,7 +321,7 @@ alert("Generate Preview First");
 return;
 }
 
-// PDF ডাউনলোড করার সময় একদম নিখুঁত ১ পেজ সাইজ বজায় রাখার অপশন
+// html2pdf-এর নিখুঁত সেটিংস যাতে ১ পাতায় ফুল-স্ক্রিন জেনারেট হয়
 html2pdf().set({
 margin: 0,
 filename: "Cover_Page.pdf",
@@ -317,7 +329,7 @@ image: { type: "jpeg", quality: 1 },
 html2canvas: { 
     scale: 2, 
     useCORS: true,
-    logging: false
+    letterRendering: true
 },
 jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
 }).from(element).save();
