@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assignment / Lab Copy Cover Page Generator</title>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<!-- PDF লাইব্রেরির বদলে html2canvas লাইব্রেরি যুক্ত করা হয়েছে ছবি ডাউনলোডের জন্য -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
 
@@ -205,8 +206,9 @@ height:120px;
 Generate Preview
 </button>
 
-<button class="download" onclick="downloadPDF()">
-Download PDF
+<!-- বাটনের নাম ও ফাংশন পরিবর্তন করে JPG ডাউনলোডের উপযোগী করা হয়েছে -->
+<button class="download" onclick="downloadJPG()">
+Download JPG
 </button>
 
 <div id="preview"></div>
@@ -321,42 +323,26 @@ ${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
 
 }
 
-function downloadPDF(){
+// নতুন ফাংশন যা কাভার পেজটিকে হাই-কোয়ালিটি JPG ছবি হিসেবে ডাউনলোড করবে
+function downloadJPG(){
 
-const element=document.querySelector(".cover-page");
+const element = document.querySelector(".cover-page");
 
 if(!element){
 alert("Generate Preview First");
 return;
 }
 
-html2pdf().set({
-
-margin:0,
-
-filename:"Cover_Page.pdf",
-
-pagebreak:{
-mode: "css"
-},
-
-image:{
-type:"jpeg",
-quality:1
-},
-
-html2canvas:{
-scale:2,
-useCORS:true
-},
-
-jsPDF:{
-unit:"mm",
-format:"a4",
-orientation:"portrait"
-}
-
-}).from(element).save();
+// html2canvas ব্যবহার করে নিখুঁত ছবি তৈরি
+html2canvas(element, {
+scale: 2, // ছবির কোয়ালিটি বা রেজোলিউশন বাড়ানোর জন্য scale ২ রাখা হয়েছে
+useCORS: true
+}).then(canvas => {
+const link = document.createElement("a");
+link.download = "Cover_Page.jpg";
+link.href = canvas.toDataURL("image/jpeg", 1.0); // 1.0 মানে সর্বোচ্চ কোয়ালিটি
+link.click();
+});
 
 }
 
