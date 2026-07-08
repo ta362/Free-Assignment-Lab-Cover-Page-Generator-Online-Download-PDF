@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assignment / Lab Copy Cover Page Generator</title>
 
-<!-- PDF লাইব্রেরির বদলে html2canvas লাইব্রেরি যুক্ত করা হয়েছে ছবি ডাউনলোডের জন্য -->
+<!-- html2canvas লাইব্রেরি ছবি ডাউনলোডের জন্য -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
@@ -16,148 +16,180 @@ padding:0;
 box-sizing:border-box;
 }
 
-body{
-font-family:Arial,sans-serif;
-background:#f2f2f2;
-padding:20px;
+body {
+font-family: Arial, sans-serif;
+/* পেজের ব্যাকগ্রাউন্ড কালারফুল গ্রেডিয়েন্ট করা হয়েছে */
+background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+min-height: 100vh;
+padding: 40px 20px;
 }
 
-.container{
-max-width:900px;
-margin:auto;
-background:#fff;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,.1);
+.container {
+max-width: 900px;
+margin: auto;
+/* ফর্মের ব্যাকগ্রাউন্ড হালকা গ্লাস ইফেক্ট দেওয়া হয়েছে */
+background: rgba(255, 255, 255, 0.95);
+padding: 30px;
+border-radius: 15px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
-h2{
-text-align:center;
-margin-bottom:20px;
+h2 {
+text-align: center;
+margin-bottom: 30px;
+color: #1a365d;
+font-size: 28px;
+font-weight: bold;
 }
 
+/* ইনপুট বক্সগুলোর স্টাইল ও ব্যাকগ্রাউন্ড সুন্দর করা হয়েছে */
 input,
-select{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:1px solid #ccc;
-border-radius:6px;
+select {
+width: 100%;
+padding: 14px;
+margin: 10px 0;
+border: 2px solid #e2e8f0;
+border-radius: 8px;
+background-color: #f8fafc;
+font-size: 15px;
+transition: all 0.3s ease;
 }
 
-button{
-padding:12px 20px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-top:10px;
-margin-right:10px;
+/* ইনপুট বক্সে ক্লিক করলে চমৎকার গ্লো ইফেক্ট আসবে */
+input:focus,
+select:focus {
+border-color: #3182ce;
+background-color: #fff;
+box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+outline: none;
 }
 
-.generate{
-background:#1976d2;
-color:#fff;
+label {
+display: block;
+margin-top: 15px;
+color: #4a5568;
 }
 
-.download{
-background:#2e7d32;
-color:#fff;
+button {
+padding: 14px 25px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+margin-top: 15px;
+margin-right: 10px;
+font-weight: bold;
+font-size: 16px;
+transition: transform 0.2s, background 0.3s;
 }
 
-#preview{
-margin-top:30px;
-display:none;
+button:active {
+transform: scale(0.98);
 }
 
-/* PDF COVER */
-
-.cover-page{
-width:210mm;
-min-height:297mm;
-background:#fff;
-margin:auto;
-padding:15mm;
-font-family:"Times New Roman",serif;
-text-align:center;
-overflow:hidden;
+.generate {
+background: #3182ce;
+color: #fff;
 }
 
-.type{
-font-size:30px;
-font-weight:bold;
-margin-bottom:18px;
-}
-  
-.college{
-font-size:36px;
-line-height:1.2;
-margin-bottom:18px;
-font-weight:bold;
+.generate:hover {
+background: #2b6cb0;
 }
 
-.course{
-font-size:24px;
-margin:10px 0;
-font-weight:bold;
+.download {
+background: #38a169;
+color: #fff;
 }
 
-.logo{
-width:170px;
-height:170px;
-object-fit:contain;
-display:block;
-margin:10px auto;
+.download:hover {
+background: #2f855a;
 }
 
-.section{
-margin-top:25px;
+#preview {
+margin-top: 40px;
+display: none;
+background: #fff;
+padding: 20px;
+border-radius: 12px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.section h3{
-font-size:28px;
-font-weight:bold;
-margin-bottom:8px;
+/* কাভার পেজের মূল ডিজাইন (ডাউনলোডের জন্য এটি অপরিবর্তিত রাখা হয়েছে) */
+.cover-page {
+width: 210mm;
+min-height: 297mm;
+background: #fff;
+margin: auto;
+padding: 15mm;
+font-family: "Times New Roman", serif;
+text-align: center;
+overflow: hidden;
+box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
-.name{
-font-size:26px;
-font-weight:bold;
-margin-bottom:6px;
-}
-
-.section p{
-font-size:20px;
-line-height:1.5;
-margin:2px 0;
+.type {
+font-size: 30px;
+font-weight: bold;
+margin-bottom: 18px;
 }
   
-.date{
-margin-top:35px;
-font-size:17px;
-font-weight:bold;
+.college {
+font-size: 36px;
+line-height: 1.2;
+margin-bottom: 18px;
+font-weight: bold;
 }
 
-@media(max-width:850px){
-
-.cover-page{
-width:100%;
-height:auto;
-padding:20px;
+.course {
+font-size: 24px;
+margin: 10px 0;
+font-weight: bold;
 }
 
-.college{
-font-size:24px;
+.logo {
+width: 170px;
+height: 170px;
+object-fit: contain;
+display: block;
+margin: 10px auto;
 }
 
-.course{
-font-size:18px;
+.section {
+margin-top: 25px;
 }
 
-.logo{
-width:120px;
-height:120px;
+.section h3 {
+font-size: 28px;
+font-weight: bold;
+margin-bottom: 8px;
 }
 
+.name {
+font-size: 26px;
+font-weight: bold;
+margin-bottom: 6px;
+}
+
+.section p {
+font-size: 20px;
+line-height: 1.5;
+margin: 2px 0;
+}
+  
+.date {
+margin-top: 35px;
+font-size: 17px;
+font-weight: bold;
+}
+
+@media(max-width: 850px){
+.cover-page {
+width: 100%;
+height: auto;
+padding: 20px;
+}
+.college { font-size: 24px; }
+.course { font-size: 18px; }
+.logo { width: 120px; height: 120px; }
 }
 
 </style>
@@ -200,13 +232,12 @@ height:120px;
 <input type="date" id="date">
 
 <label><b>Upload College Logo</b></label>
-<input type="file" id="logo" accept="image/*">
+<input type="file" id="logo" accept="image/*" style="background: none; border: none; padding: 5px 0;">
 
 <button class="generate" onclick="generateCover()">
 Generate Preview
 </button>
 
-<!-- বাটনের নাম ও ফাংশন পরিবর্তন করে JPG ডাউনলোডের উপযোগী করা হয়েছে -->
 <button class="download" onclick="downloadJPG()">
 Download JPG
 </button>
@@ -220,25 +251,17 @@ Download JPG
 let logoImage="";
 
 document.getElementById("logo").addEventListener("change",function(e){
-
 const file=e.target.files[0];
-
 if(file){
-
 const reader=new FileReader();
-
 reader.onload=function(event){
 logoImage=event.target.result;
 };
-
 reader.readAsDataURL(file);
-
 }
-
 });
 
 function generateCover(){
-
 const college=document.getElementById("college").value;
 const course=document.getElementById("course").value;
 const courseCode=document.getElementById("courseCode").value;
@@ -260,90 +283,57 @@ const inputDate = document.getElementById("date").value;
 let date = "";
 
 if (inputDate) {
-    const parts = inputDate.split("-"); // YYYY-MM-DD
-    date = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+    const parts = inputDate.split("-"); 
+    date = `${parts[2]}-${parts[1]}-${parts[0]}`; 
 }
 
 document.getElementById("preview").style.display="block";
 
 document.getElementById("preview").innerHTML=`
-
 <div class="cover-page">
-
 <div class="type">${submissionType}</div>
-
 <div class="college">${college}</div>
-
-<div class="course">
-<b>Course Title:</b> ${course}
-</div>
-
-<div class="course">
-<b>Course Code:</b> ${courseCode}
-</div>
-
+<div class="course"><b>Course Title:</b> ${course}</div>
+<div class="course"><b>Course Code:</b> ${courseCode}</div>
 ${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
-
 <div class="section">
-
 <h3>Submitted To</h3>
-
 <div class="name">${teacher}</div>
-
 <p>${designation}</p>
-
 <p>${department}</p>
-
 <p>${college}</p>
-
 </div>
-
 <div class="section">
-
 <h3>Submitted By</h3>
-
 <div class="name">${student}</div>
-
 <p>Student ID: ${studentId}</p>
-
 <p>Roll No: ${roll}</p>
-
 <p>Registration No: ${reg}</p>
-
 <p>Department: ${department}</p>
-
 <p>Semester: ${semester}</p>
-
 <p>Session: ${session}</p>
 <p><b>Date of Submission:</b> ${date}</p>
-
 </div>
-
+</div>
 `;
-
 }
 
-// নতুন ফাংশন যা কাভার পেজটিকে হাই-কোয়ালিটি JPG ছবি হিসেবে ডাউনলোড করবে
 function downloadJPG(){
-
 const element = document.querySelector(".cover-page");
-
 if(!element){
 alert("Generate Preview First");
 return;
 }
 
-// html2canvas ব্যবহার করে নিখুঁত ছবি তৈরি
 html2canvas(element, {
-scale: 2, // ছবির কোয়ালিটি বা রেজোলিউশন বাড়ানোর জন্য scale ২ রাখা হয়েছে
+scale: 2, 
 useCORS: true
 }).then(canvas => {
 const link = document.createElement("a");
 link.download = "Cover_Page.jpg";
-link.href = canvas.toDataURL("image/jpeg", 1.0); // 1.0 মানে সর্বোচ্চ কোয়ালিটি
+link.href = canvas.toDataURL("image/jpeg", 1.0); 
 link.click();
 });
-
 }
 
 </script>
