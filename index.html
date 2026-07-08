@@ -111,19 +111,21 @@ background: #fff;
 padding: 20px;
 border-radius: 12px;
 box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+overflow-x: auto; /* ছোট স্ক্রিনে টেবিল বা বড় ডিভাইস স্ক্রল করার জন্য */
 }
 
-/* কাভার পেজের মূল ডিজাইন (ডাউনলোডের জন্য এটি অপরিবর্তিত রাখা হয়েছে) */
+/* কাভার পেজের মূল ডিজাইন (A4 সাইজ) */
 .cover-page {
 width: 210mm;
-min-height: 297mm;
+height: 297mm; /* এখানে min-height এর বদলে ফিক্সড height দেওয়া হয়েছে */
 background: #fff;
 margin: auto;
-padding: 15mm;
+padding: 20mm 15mm;
 font-family: "Times New Roman", serif;
 text-align: center;
 overflow: hidden;
 box-shadow: 0 0 20px rgba(0,0,0,0.1);
+position: relative;
 }
 
 .type {
@@ -181,15 +183,12 @@ font-size: 17px;
 font-weight: bold;
 }
 
+/* শুধুমাত্র স্ক্রিনে দেখার জন্য রেসপনসিভ মিডিয়া কুয়েরি, যা ডাউনলোডে প্রভাব ফেলবে না */
 @media(max-width: 850px){
-.cover-page {
-width: 100%;
-height: auto;
-padding: 20px;
+.preview-mode {
+transform: scale(0.6);
+transform-origin: top center;
 }
-.college { font-size: 24px; }
-.course { font-size: 18px; }
-.logo { width: 120px; height: 120px; }
 }
 
 </style>
@@ -290,7 +289,7 @@ if (inputDate) {
 document.getElementById("preview").style.display="block";
 
 document.getElementById("preview").innerHTML=`
-<div class="cover-page">
+<div class="cover-page" id="target-cover">
 <div class="type">${submissionType}</div>
 <div class="college">${college}</div>
 <div class="course"><b>Course Title:</b> ${course}</div>
@@ -318,19 +317,30 @@ ${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
 `;
 }
 
+// একদম নিখুঁত A4 সাইজের ইমেজ ডাউনলোডের ফাংশন
 function downloadJPG(){
-const element = document.querySelector(".cover-page");
+const element = document.getElementById("target-cover");
 if(!element){
 alert("Generate Preview First");
 return;
 }
 
+// ডাউনলোড করার সময় ব্যাকগ্রাউন্ডে একটি নির্দিষ্ট উইন্ডো সাইজ (A4 রেশিও) তৈরি করে নেওয়া হচ্ছে
 html2canvas(element, {
-scale: 2, 
-useCORS: true
+scale: 2, // ইমেজ কোয়ালিটি হাই রাখার জন্য
+useCORS: true,
+allowTaint: true,
+width: 794,  // A4 সাইজের স্ট্যান্ডার্ড পিক্সেল উইডথ (72 DPI তে)
+height: 1123, // A4 সাইজের স্ট্যান্ডার্ড পিক্সেল হাইট (72 DPI তে)
+onclone: (clonedDoc) => {
+    // মোবাইল বা ছোট স্ক্রিনে যেন ইমেজ চ্যাপ্টা না হয়ে যায়, তাই ক্লোন করা এলিমেন্টকে ফিক্সড সাইজ দেওয়া হলো
+    const clonedElement = clonedDoc.getElementById("target-cover");
+    clonedElement.style.width = "210mm";
+    clonedElement.style.height = "297mm";
+}
 }).then(canvas => {
 const link = document.createElement("a");
-link.download = "Cover_Page.jpg";
+link.download = "Cover_Page_A4.jpg";
 link.href = canvas.toDataURL("image/jpeg", 1.0); 
 link.click();
 });
