@@ -8,7 +8,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -66,99 +65,118 @@ color:#fff;
 #preview{
 margin-top:30px;
 display:none;
+/* প্রিভিউ স্ক্রিনে দেখার জন্য ব্যাকগ্রাউন্ড ও বর্ডার */
+background: #e0e0e0;
+padding: 20px;
+border-radius: 8px;
 }
 
-/* PDF COVER */
-
+/* PDF COVER - 1 PAGE FIX */
 .cover-page{
 width:210mm;
-min-height:297mm;
+height:297mm; /* min-height বদলে নির্দিষ্ট height দেওয়া হলো */
 background:#fff;
 margin:auto;
-padding:15mm;
+padding:20mm; /* পারফেক্ট মার্জিন */
 font-family:"Times New Roman",serif;
 text-align:center;
-overflow:hidden;
+box-sizing: border-box;
+display: flex;
+flex-direction: column;
+justify-content: space-between; /* সব এলিমেন্ট ১ পাতায় সমানভাবে সাজানোর জন্য */
 }
 
 .type{
-font-size:30px;
+font-size:32px;
 font-weight:bold;
-margin-bottom:18px;
+text-transform: uppercase;
+margin-top: 10px;
 }
   
 .college{
-font-size:36px;
+font-size:34px;
 line-height:1.2;
-margin-bottom:18px;
 font-weight:bold;
+margin-top: 15px;
+}
+
+.course-info {
+margin-top: 15px;
 }
 
 .course{
-font-size:24px;
-margin:10px 0;
-font-weight:bold;
+font-size:22px;
+margin:5px 0;
+}
+
+.logo-container {
+height: 160px;
+display: flex;
+align-items: center;
+justify-content: center;
+margin: 15px 0;
 }
 
 .logo{
-width:170px;
-height:170px;
+max-width:160px;
+max-height:160px;
 object-fit:contain;
-display:block;
-margin:10px auto;
+}
+
+/* সাবমিট সেকশনগুলোকে পাশাপাশি বা সুন্দর দূরত্বে রাখার জন্য */
+.submission-details {
+display: flex;
+justify-content: space-between;
+text-align: left;
+margin-top: 20px;
+padding: 0 10px;
 }
 
 .section{
-margin-top:25px;
+width: 48%;
 }
 
 .section h3{
-font-size:28px;
+font-size:22px;
 font-weight:bold;
-margin-bottom:8px;
+border-bottom: 2px solid #000;
+padding-bottom: 5px;
+margin-bottom: 12px;
 }
 
 .name{
-font-size:26px;
+font-size:20px;
 font-weight:bold;
 margin-bottom:6px;
 }
 
 .section p{
-font-size:20px;
-line-height:1.5;
-margin:2px 0;
+font-size:16px;
+line-height:1.4;
+margin:4px 0;
 }
   
 .date{
-margin-top:35px;
-font-size:17px;
+margin-bottom: 15px;
+font-size:18px;
 font-weight:bold;
 }
 
 @media(max-width:850px){
-
+/* শুধু ব্রাউজারে দেখার সুবিধার জন্য রেসপন্সিভ করা হলো, পিডিএফে এটার প্রভাব পড়বে না */
 .cover-page{
 width:100%;
 height:auto;
 padding:20px;
 }
-
-.college{
-font-size:24px;
+.submission-details {
+flex-direction: column;
 }
-
-.course{
-font-size:18px;
+.section {
+width: 100%;
+margin-bottom: 20px;
 }
-
-.logo{
-width:120px;
-height:120px;
 }
-
-}
-
 </style>
 </head>
 <body>
@@ -168,9 +186,7 @@ height:120px;
 <h2>Assignment / Lab Copy Cover Page Generator</h2>
 
 <input type="text" id="college" placeholder="College Name">
-
 <input type="text" id="course" placeholder="Course Title">
-
 <input type="text" id="courseCode" placeholder="Course Code">
 
 <select id="submissionType">
@@ -179,64 +195,42 @@ height:120px;
 </select>
 
 <input type="text" id="teacher" placeholder="Faculty Name">
-
 <input type="text" id="designation" placeholder="Designation">
-
 <input type="text" id="department" placeholder="Department">
 
 <input type="text" id="student" placeholder="Student Name">
-
 <input type="text" id="studentId" placeholder="Student ID">
-
 <input type="text" id="roll" placeholder="Roll Number">
-
 <input type="text" id="reg" placeholder="Registration Number">
-
 <input type="text" id="semester" placeholder="Semester">
-
 <input type="text" id="session" placeholder="Session">
-
 <input type="date" id="date">
 
 <label><b>Upload College Logo</b></label>
 <input type="file" id="logo" accept="image/*">
 
-<button class="generate" onclick="generateCover()">
-Generate Preview
-</button>
-
-<button class="download" onclick="downloadPDF()">
-Download PDF
-</button>
+<button class="generate" onclick="generateCover()">Generate Preview</button>
+<button class="download" onclick="downloadPDF()">Download PDF</button>
 
 <div id="preview"></div>
 
 </div>
 
 <script>
-
 let logoImage="";
 
 document.getElementById("logo").addEventListener("change",function(e){
-
 const file=e.target.files[0];
-
 if(file){
-
 const reader=new FileReader();
-
 reader.onload=function(event){
 logoImage=event.target.result;
 };
-
 reader.readAsDataURL(file);
-
 }
-
 });
 
 function generateCover(){
-
 const college=document.getElementById("college").value;
 const course=document.getElementById("course").value;
 const courseCode=document.getElementById("courseCode").value;
@@ -256,73 +250,58 @@ const session=document.getElementById("session").value;
 const inputDate = document.getElementById("date").value;
 
 let date = "";
-
 if (inputDate) {
-    const parts = inputDate.split("-"); // YYYY-MM-DD
-    date = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+    const parts = inputDate.split("-"); 
+    date = `${parts[2]}-${parts[1]}-${parts[0]}`; 
 }
 
 document.getElementById("preview").style.display="block";
 
 document.getElementById("preview").innerHTML=`
-
 <div class="cover-page">
+    <div>
+        <div class="type">${submissionType}</div>
+        <div class="college">${college}</div>
+    </div>
 
-<div class="type">${submissionType}</div>
+    <div class="course-info">
+        <div class="course"><b>Course Title:</b> ${course}</div>
+        <div class="course"><b>Course Code:</b> ${courseCode}</div>
+    </div>
 
-<div class="college">${college}</div>
+    <div class="logo-container">
+        ${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
+    </div>
 
-<div class="course">
-<b>Course Title:</b> ${course}
+    <div class="submission-details">
+        <div class="section">
+            <h3>Submitted To</h3>
+            <div class="name">${teacher}</div>
+            <p>${designation}</p>
+            <p>${department}</p>
+            <p>${college}</p>
+        </div>
+
+        <div class="section">
+            <h3>Submitted By</h3>
+            <div class="name">${student}</div>
+            <p><b>Student ID:</b> ${studentId}</p>
+            <p><b>Roll No:</b> ${roll}</p>
+            <p><b>Reg No:</b> ${reg}</p>
+            <p><b>Department:</b> ${department}</p>
+            <p><b>Semester:</b> ${semester}</p>
+            <p><b>Session:</b> ${session}</p>
+        </div>
+    </div>
+
+    <div class="date">
+        <p>Date of Submission: ${date}</p>
+    </div>
 </div>
-
-<div class="course">
-<b>Course Code:</b> ${courseCode}
-</div>
-
-${logoImage ? `<img src="${logoImage}" class="logo">` : ""}
-
-<div class="section">
-
-<h3>Submitted To</h3>
-
-<div class="name">${teacher}</div>
-
-<p>${designation}</p>
-
-<p>${department}</p>
-
-<p>${college}</p>
-
-</div>
-
-<div class="section">
-
-<h3>Submitted By</h3>
-
-<div class="name">${student}</div>
-
-<p>Student ID: ${studentId}</p>
-
-<p>Roll No: ${roll}</p>
-
-<p>Registration No: ${reg}</p>
-
-<p>Department: ${department}</p>
-
-<p>Semester: ${semester}</p>
-
-<p>Session: ${session}</p>
-<p><b>Date of Submission:</b> ${date}</p>
-
-</div>
-
 `;
-
 }
 
 function downloadPDF(){
-
 const element=document.querySelector(".cover-page");
 
 if(!element){
@@ -330,36 +309,19 @@ alert("Generate Preview First");
 return;
 }
 
+// PDF ডাউনলোড করার সময় একদম নিখুঁত ১ পেজ সাইজ বজায় রাখার অপশন
 html2pdf().set({
-
-margin:0,
-
-filename:"Cover_Page.pdf",
-
-pagebreak:{
-mode: "css"
+margin: 0,
+filename: "Cover_Page.pdf",
+image: { type: "jpeg", quality: 1 },
+html2canvas: { 
+    scale: 2, 
+    useCORS: true,
+    logging: false
 },
-
-image:{
-type:"jpeg",
-quality:1
-},
-
-html2canvas:{
-scale:2,
-useCORS:true
-},
-
-jsPDF:{
-unit:"mm",
-format:"a4",
-orientation:"portrait"
-}
-
+jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
 }).from(element).save();
-
 }
-
 </script>
 
 </body>
